@@ -1,0 +1,26 @@
+body {
+    height: 100vh;
+    background-color: #000000;
+    margin: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+div#container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div#game {
+    width: 500px;
+    height: 500px;
+    background-color: #ffffff;
+}
+
+form.login {
+    margin: 30px;
+}
