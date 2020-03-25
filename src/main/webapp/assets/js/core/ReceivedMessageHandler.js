@@ -23,7 +23,11 @@ export class ReceivedMessageHandler {
 
             case 'QUEUED':
                 this._game.setStatus('QUEUED');
-                break
+                break;
+
+            case 'TARGET':
+                message.targets.forEach(target => this._game._ui.drawTarget(target));
+                break;
         }
 
         console.log(message);

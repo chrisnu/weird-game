@@ -5,7 +5,7 @@ import {UI} from "./core/UI.js";
 
 (function mainApp() {
     const game = new Game(
-        new UI(),
+        new UI('#E50024', '#FFFFFF'),
         new WebSocket('ws://localhost:8080/game')
     );
 

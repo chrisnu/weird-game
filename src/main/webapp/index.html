@@ -12,17 +12,21 @@
     <div id="container">
         <div id="game">
             <form class="login">
-                <label for="name">Name</label>
+                <label for="name" id="label-name">Name</label>
                 <input type="text" id="name" placeholder="Type your name" />
                 <button type="button" id="login" class="btn">Play</button>
             </form>
             <div class="hidden" id="display-wait">
-                <h3>Waiting for other players before the game start...</h3>
+                <h4>Waiting for other players before the game start...</h4>
             </div>
             <div class="hidden" id="display-queue">
-                <h3>The game is currently full. Please wait until other players are done with the game</h3>
+                <h4>The game is currently full. Please wait until other players are done with the game</h4>
             </div>
         </div>
+
+        <canvas width="500" height="500" id="canvas">
+
+        </canvas>
     </div>
 
 </body>

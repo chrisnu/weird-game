@@ -16,11 +16,17 @@ div#container {
 }
 
 div#game {
-    width: 500px;
+    width: 200px;
     height: 500px;
     background-color: #ffffff;
 }
 
 form.login {
     margin: 30px;
+}
+
+
+canvas {
+    background-color: #ffffff;
+    border-left: 5px solid #f2f2f2;
 }
