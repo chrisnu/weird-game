@@ -25,6 +25,7 @@ public class Player extends Actor {
     }
 
     public Player(String session) {
+        this();
         this.session = session;
     }
 
@@ -44,19 +45,23 @@ public class Player extends Actor {
         this.gameEndpoint.getSession().getBasicRemote().sendObject(message);
     }
 
-//    @Override
-//    public boolean equals(Object object) {
-//        Player player = (Player) object;
-//
-//        if (player.getSession() == null) {
-//            return false;
-//        }
-//
-//        return player.getSession().equals(session);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return session.hashCode();
-//    }
+    @Override
+    public boolean equals(Object object) {
+        if (getClass() != object.getClass()) {
+            return false;
+        }
+
+        Player player = (Player) object;
+
+        if (player.getSession() == null) {
+            return false;
+        }
+
+        return player.getSession().equals(session);
+    }
+
+    @Override
+    public int hashCode() {
+        return session.hashCode();
+    }
 }

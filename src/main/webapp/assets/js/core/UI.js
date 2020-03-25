@@ -10,6 +10,10 @@ export class UI {
     _nameLabel;
     _canvas;
     _canvasContext;
+    _dashboard;
+    _playersUl;
+    _playersLiTemplate;
+    _playersLiBoldTemplate;
 
     _displayWait;
     _displayQueue;
@@ -33,6 +37,11 @@ export class UI {
         this._nameLabel = document.querySelector('label#label-name');
         this._displayWait = document.querySelector('div#display-wait');
         this._displayQueue = document.querySelector('div#display-queue');
+        this._dashboard = document.querySelector('div#dashboard');
+        this._playersUl = document.querySelector('ul.players');
+        this._playersLiTemplate = document.querySelector('li.player').outerHTML;
+        document.querySelector('li.player').classList.add('bold');
+        this._playersLiBoldTemplate = document.querySelector('li.player').outerHTML;
         this._canvas = document.querySelector('canvas#canvas');
         this._canvasContext = this._canvas.getContext('2d');
     }
@@ -83,6 +92,7 @@ export class UI {
     _showQueueScreen() {
         this._loginBtn.classList.add('hidden');
         this._nameInput.classList.add('hidden');
+        this._nameLabel.classList.add('hidden');
 
         this._displayQueue.classList.remove('hidden');
     }
@@ -100,5 +110,26 @@ export class UI {
             this._canvasContext.closePath();
             this._canvasContext.fill();
         }
+    }
+
+    updateDashboard(player, players) {
+        this._dashboard.classList.remove('hidden');
+
+        // Clean the ul child nodes
+        while (this._playersUl.firstChild) {
+            this._playersUl.removeChild(this._playersUl.lastChild);
+        }
+
+        let innerHTML = '';
+
+        players.forEach(p => {
+            const template = player.session === p.session ? this._playersLiBoldTemplate : this._playersLiTemplate;
+            const li = template
+                .replace('{{players.name}}', p.name)
+                .replace('{{players.score}}', p.score);
+            innerHTML += li;
+        });
+
+        this._playersUl.innerHTML = innerHTML;
     }
 }

@@ -6,7 +6,7 @@ import {ReceivedMessageHandler} from "./ReceivedMessageHandler.js";
 
 export class Game {
 
-    _ui; _player; _websocket; _status;
+    _ui; _player; _players; _websocket; _status;
 
     constructor(ui, webSocket) {
         this._ui = ui;
@@ -40,5 +40,14 @@ export class Game {
 
     notify(message) {
         this._websocket.send(JSON.stringify(message));
+    }
+
+    updatePlayers(players) {
+        this._players = players;
+        this._ui.updateDashboard(this._player, players);
+    }
+
+    updatePlayer(player) {
+        this._player = player;
     }
 }

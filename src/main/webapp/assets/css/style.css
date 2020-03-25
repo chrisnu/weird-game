@@ -17,13 +17,31 @@ div#game {
     background-color: #ffffff;
 }
 
+canvas {
+    background-color: #ffffff;
+    border-left: 5px solid #f2f2f2;
+}
+
+/* Components */
 form.login {
     margin: 30px;
 }
 
-canvas {
-    background-color: #ffffff;
-    border-left: 5px solid #f2f2f2;
+li.player {
+    display: flex;
+}
+
+li.player > span:nth-last-child(1) {
+    margin-left: auto;
+    margin-right: 15px;
+}
+
+li.player > span:nth-child(1) {
+    margin-left: 15px;
+}
+
+li.player > span {
+    margin-bottom: 5px;
 }
 
 

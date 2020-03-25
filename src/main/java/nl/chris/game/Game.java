@@ -61,7 +61,7 @@ public class Game {
             player.broadcast(messageLoginConfirmed);
             if (status.equals(GameStatus.WAIT)) {
                 player.broadcast(new MessageWait());
-            } else if (status.equals(GameStatus.PLAY)) {
+            } else {
                 player.broadcast(new MessageQueued());
             }
         }
@@ -88,7 +88,7 @@ public class Game {
                     }
 
                     status = GameStatus.PLAY;
-                    broadcast(new MessageStart());
+                    broadcast(new MessageStart(livePlayers));
                     executor.schedule(this::randomlyCreateTarget, new Random().nextInt(MAX_DELAY_BETWEEN_TARGETS -1) + 1, TimeUnit.SECONDS);
                 }
                 break;

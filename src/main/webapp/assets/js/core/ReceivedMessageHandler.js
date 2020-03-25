@@ -10,12 +10,15 @@ export class ReceivedMessageHandler {
     process(message) {
         switch (message.type) {
             case 'LOGIN_CONFIRMED':
+                this._game.updatePlayer(message.player);
                 break;
+
             case 'WAIT':
                 this._game.setStatus('WAIT');
                 break;
 
             case 'START':
+                this._game.updatePlayers(message.players);
                 this._game.setStatus('PLAY');
                 break;
 
