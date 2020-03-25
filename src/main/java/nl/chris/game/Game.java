@@ -1,6 +1,8 @@
 package nl.chris.game;
 
 import nl.chris.communication.*;
+import nl.chris.communication.client.MessageLogin;
+import nl.chris.communication.server.*;
 import nl.chris.game.actor.Player;
 import nl.chris.game.actor.Target;
 import nl.chris.game.factory.TargetFactory;
@@ -18,7 +20,6 @@ public class Game {
     private final int MAX_SIMULTANEOUS_TARGETS = 5;
     private final int MAX_DELAY_BETWEEN_TARGETS = 4;
 
-    private final Map<String, Player> sessionPlayerMap = new ConcurrentHashMap<>();
     private final Queue<Player> queue = new ConcurrentLinkedQueue<>();
     private final Set<Player> livePlayers = new CopyOnWriteArraySet<>();
     private final Set<Target> targets = new CopyOnWriteArraySet<>();
@@ -39,30 +40,31 @@ public class Game {
     }
 
     public void closeConnection(GameEndpoint gameEndpoint) {
-        Player player = sessionPlayerMap.get(gameEndpoint.getSession().getId());
+        Player player = new Player(gameEndpoint.getSession().getId());
         queue.remove(player);
         livePlayers.remove(player);
-        sessionPlayerMap.remove(gameEndpoint.getSession().getId());
     }
 
     public void processMessage(Message message, GameEndpoint gameEndpoint) throws IOException, EncodeException {
+        Player player = new Player(gameEndpoint.getSession().getId());
         if (message instanceof MessageLogin) {
-            if (sessionPlayerMap.containsKey(gameEndpoint.getSession().getId())) {
+            if (queue.contains(player) || livePlayers.contains(player)) {
                 return;
             }
 
-            Player player = ((MessageLogin) message).getPlayer();
+            player = ((MessageLogin) message).getPlayer();
             player.setGameEndpoint(gameEndpoint);
-            sessionPlayerMap.put(gameEndpoint.getSession().getId(), player);
+            player.setSession(gameEndpoint.getSession().getId());
             queue.add(player);
 
+            MessageLoginConfirmed messageLoginConfirmed = new MessageLoginConfirmed(player);
+            player.broadcast(messageLoginConfirmed);
             if (status.equals(GameStatus.WAIT)) {
                 player.broadcast(new MessageWait());
             } else if (status.equals(GameStatus.PLAY)) {
                 player.broadcast(new MessageQueued());
             }
         }
-
     }
 
     private void broadcast(Message message) {

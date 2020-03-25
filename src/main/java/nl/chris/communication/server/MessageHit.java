@@ -1,7 +1,8 @@
-package nl.chris.communication;
+package nl.chris.communication.server;
 
 import lombok.Getter;
 import lombok.Setter;
+import nl.chris.communication.MessageType;
 import nl.chris.game.actor.Player;
 import nl.chris.game.actor.Target;
 

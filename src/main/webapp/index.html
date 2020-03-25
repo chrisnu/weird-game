@@ -22,6 +22,13 @@
             <div class="hidden" id="display-queue">
                 <h4>The game is currently full. Please wait until other players are done with the game</h4>
             </div>
+            <div class="hidden dashboard" id="dashboard">
+                <ul class="players">
+                    <li class="player">
+                        <span>{{player.name}}</span><span>{{player.score}}</span>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <canvas width="500" height="500" id="canvas">

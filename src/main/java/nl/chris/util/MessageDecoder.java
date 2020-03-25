@@ -2,6 +2,12 @@ package nl.chris.util;
 
 import com.google.gson.Gson;
 import nl.chris.communication.*;
+import nl.chris.communication.client.MessageLogin;
+import nl.chris.communication.client.MessageShot;
+import nl.chris.communication.server.MessageEnd;
+import nl.chris.communication.server.MessageHit;
+import nl.chris.communication.server.MessageQueued;
+import nl.chris.communication.server.MessageStart;
 
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
