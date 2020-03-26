@@ -3,7 +3,6 @@ package nl.chris.communication.client;
 import lombok.Getter;
 import lombok.Setter;
 import nl.chris.communication.MessageType;
-import nl.chris.communication.server.ServerMessage;
 import nl.chris.game.actor.Player;
 
 public class MessageShot extends ClientMessage {
@@ -16,8 +15,4 @@ public class MessageShot extends ClientMessage {
         super(MessageType.SHOT);
     }
 
-    @Override
-    public ServerMessage generateResponse() {
-        return null;
-    }
 }

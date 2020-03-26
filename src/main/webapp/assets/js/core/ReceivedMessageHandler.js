@@ -44,6 +44,6 @@ export class ReceivedMessageHandler {
                 break;
         }
 
-        console.log(message);
+        console.info(message);
     }
 }
