@@ -3,6 +3,7 @@ package nl.chris.communication;
 import lombok.Getter;
 import nl.chris.game.Game;
 import nl.chris.game.factory.TargetFactory;
+import nl.chris.game.tool.BruteForceTargetFinder;
 import nl.chris.util.MessageDecoder;
 import nl.chris.util.MessageEncoder;
 
@@ -17,7 +18,7 @@ import java.io.IOException;
 )
 public class GameEndpoint {
 
-    private static Game game = new Game(new TargetFactory());
+    private static Game game = new Game(new TargetFactory(), new BruteForceTargetFinder());
 
     @Getter
     private Session session;

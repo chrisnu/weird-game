@@ -6,7 +6,8 @@ export class MessageShot extends Message{
 
     player;
 
-    constructor() {
+    constructor(player) {
         super('SHOT');
+        this.player = player;
     }
 }

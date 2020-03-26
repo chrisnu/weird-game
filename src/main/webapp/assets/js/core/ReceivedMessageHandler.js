@@ -33,6 +33,10 @@ export class ReceivedMessageHandler {
             case 'TARGET':
                 message.targets.forEach(target => this._game._ui.drawTarget(target));
                 break;
+
+            case 'HIT':
+                message.targets.forEach(target =>this._game.removeTarget(target) );
+                break;
         }
 
         console.log(message);

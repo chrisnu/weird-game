@@ -5,19 +5,19 @@ import lombok.Setter;
 import nl.chris.communication.MessageType;
 import nl.chris.game.actor.Player;
 
-import java.util.Set;
+import java.util.Collection;
 
 public class MessageStart extends ServerMessage {
 
     @Getter
     @Setter
-    Set<Player> players;
+    Collection<Player> players;
 
     public MessageStart() {
         super(MessageType.START);
     }
 
-    public MessageStart(Set<Player> players) {
+    public MessageStart(Collection<Player> players) {
         this();
         this.players = players;
     }

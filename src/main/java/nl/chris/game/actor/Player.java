@@ -62,6 +62,6 @@ public class Player extends Actor {
 
     @Override
     public int hashCode() {
-        return session.hashCode();
+        return session.hashCode() * 31;
     }
 }

@@ -1,11 +1,14 @@
 package nl.chris.game;
 
-import nl.chris.communication.*;
+import nl.chris.communication.GameEndpoint;
+import nl.chris.communication.Message;
 import nl.chris.communication.client.MessageLogin;
+import nl.chris.communication.client.MessageShot;
 import nl.chris.communication.server.*;
 import nl.chris.game.actor.Player;
 import nl.chris.game.actor.Target;
 import nl.chris.game.factory.TargetFactory;
+import nl.chris.game.tool.CoordinateTargetFinder;
 
 import javax.websocket.EncodeException;
 import java.io.IOException;
@@ -21,10 +24,11 @@ public class Game {
     private final int MAX_DELAY_BETWEEN_TARGETS = 4;
 
     private final Queue<Player> queue = new ConcurrentLinkedQueue<>();
-    private final Set<Player> livePlayers = new CopyOnWriteArraySet<>();
+    private final Map<String, Player> livePlayers = new ConcurrentHashMap<>();
     private final Set<Target> targets = new CopyOnWriteArraySet<>();
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
     private final TargetFactory targetFactory;
+    private final CoordinateTargetFinder coordinateFinder;
 
     private GameStatus status = GameStatus.WAIT;
 
@@ -35,26 +39,29 @@ public class Game {
         executor.scheduleWithFixedDelay(this::gameCheck, 5, 3, TimeUnit.SECONDS);
     }
 
-    public Game(TargetFactory targetFactory) {
+    public Game(TargetFactory targetFactory, CoordinateTargetFinder coordinateFinder) {
         this.targetFactory = targetFactory;
+        this.coordinateFinder = coordinateFinder;
     }
 
     public void closeConnection(GameEndpoint gameEndpoint) {
-        Player player = new Player(gameEndpoint.getSession().getId());
+        String session = gameEndpoint.getSession().getId();
+        Player player = new Player(session);
         queue.remove(player);
-        livePlayers.remove(player);
+        livePlayers.remove(session);
     }
 
     public void processMessage(Message message, GameEndpoint gameEndpoint) throws IOException, EncodeException {
-        Player player = new Player(gameEndpoint.getSession().getId());
+        String session = gameEndpoint.getSession().getId();
         if (message instanceof MessageLogin) {
-            if (queue.contains(player) || livePlayers.contains(player)) {
+            Player player = new Player(session);
+            if (queue.contains(player) || livePlayers.containsKey(session)) {
                 return;
             }
 
             player = ((MessageLogin) message).getPlayer();
             player.setGameEndpoint(gameEndpoint);
-            player.setSession(gameEndpoint.getSession().getId());
+            player.setSession(session);
             queue.add(player);
 
             MessageLoginConfirmed messageLoginConfirmed = new MessageLoginConfirmed(player);
@@ -64,11 +71,27 @@ public class Game {
             } else {
                 player.broadcast(new MessageQueued());
             }
+        } else if (message instanceof MessageShot) {
+            List<Target> hitTargets = coordinateFinder.hitTarget(((MessageShot) message).getPlayer().getCoordinate());
+
+            if (hitTargets.isEmpty()) {
+                return;
+            }
+
+            targets.removeAll(hitTargets);
+
+            Player shootingPlayer = livePlayers.get(session);
+            hitTargets.forEach(
+                target -> shootingPlayer.setScore(shootingPlayer.getScore() + target.getScore())
+            );
+
+            MessageHit messageHit = new MessageHit(hitTargets, shootingPlayer);
+            broadcast(messageHit);
         }
     }
 
     private void broadcast(Message message) {
-        livePlayers.parallelStream().forEach(
+        livePlayers.values().parallelStream().forEach(
                 player -> {
                     try {
                         player.broadcast(message);
@@ -84,11 +107,14 @@ public class Game {
             case WAIT:
                 if (queue.size() >= MAX_PLAYERS) {
                     for (int i = 0; i < MAX_PLAYERS; i++) {
-                        livePlayers.add(queue.poll());
+                        Player player = queue.poll();
+                        if (player != null) {
+                            livePlayers.put(player.getSession(), player);
+                        }
                     }
 
                     status = GameStatus.PLAY;
-                    broadcast(new MessageStart(livePlayers));
+                    broadcast(new MessageStart(livePlayers.values()));
                     executor.schedule(this::randomlyCreateTarget, new Random().nextInt(MAX_DELAY_BETWEEN_TARGETS -1) + 1, TimeUnit.SECONDS);
                 }
                 break;
@@ -100,7 +126,7 @@ public class Game {
                 }
                 break;
             case END:
-                livePlayers.parallelStream().forEach(
+                livePlayers.values().forEach(
                         player -> {
                             closeConnection(player.getGameEndpoint());
                             player.disconnect();
@@ -124,6 +150,7 @@ public class Game {
             Target target = targetFactory.newTarget();
             messageTargets.add(target);
             targets.add(target);
+            coordinateFinder.registerTarget(target);
         }
 
         MessageTarget message = new MessageTarget();

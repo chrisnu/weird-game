@@ -6,7 +6,6 @@ import nl.chris.communication.MessageType;
 import nl.chris.game.actor.Player;
 import nl.chris.game.actor.Target;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MessageHit extends ServerMessage {
@@ -19,12 +18,9 @@ public class MessageHit extends ServerMessage {
     @Setter
     private Player player;
 
-    public MessageHit() {
+    public MessageHit(List<Target> targets, Player player) {
         super(MessageType.HIT);
-        this.targets = new ArrayList<>();
-    }
-
-    public void addTarget(Target target) {
-        targets.add(target);
+        this.targets = targets;
+        this.player = player;
     }
 }

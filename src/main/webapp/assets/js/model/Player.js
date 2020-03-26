@@ -4,9 +4,15 @@ import {Actor} from "./Actor.js";
 
 export class Player extends Actor {
 
-    id;
+    id; _gunshotSound;
 
-    shoot(coordinate) {
+    constructor(name) {
+        super();
+        this.name = name;
+        this._gunshotSound = new Audio('assets/sound/gunshot.mp3')
+    }
 
+    shoot() {
+        this._gunshotSound.play();
     }
 }

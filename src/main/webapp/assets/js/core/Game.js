@@ -1,16 +1,16 @@
 "use strict";
 
-import {Player} from "../model/Player.js";
-import {MessageLogin} from "../message/client/MessageLogin.js";
 import {ReceivedMessageHandler} from "./ReceivedMessageHandler.js";
+import {EventHandler} from "./EventHandler.js";
 
 export class Game {
 
     _ui; _player; _players; _websocket; _status;
 
-    constructor(ui, webSocket) {
+    constructor(ui, webSocket, player) {
         this._ui = ui;
         this._websocket = webSocket;
+        this._player = player;
     }
 
     start() {
@@ -18,7 +18,7 @@ export class Game {
         this._websocket.onmessage = message => messageHandler.process(JSON.parse(message.data));
 
         this._ui.start();
-        this._ui.attachListeners(this, this._login);
+        this._ui.attachListeners(new EventHandler(this, this._player));
     }
 
     setStatus(status) {
@@ -26,19 +26,8 @@ export class Game {
         this._ui.onGameStatusChange(status);
     }
 
-    _login(name) {
-        if (!name) {
-            alert('Please fill in your name');
-            return;
-        }
-
-        this._player = new Player(name, 0, 0, {x: 0, y: 0});
-        const message = new MessageLogin();
-        message.player = this._player;
-        this.notify(message);
-    }
-
     notify(message) {
+        console.log(message);
         this._websocket.send(JSON.stringify(message));
     }
 
@@ -49,5 +38,9 @@ export class Game {
 
     updatePlayer(player) {
         this._player = player;
+    }
+
+    removeTarget(target) {
+        this._ui.removeTarget(target);
     }
 }

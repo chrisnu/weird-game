@@ -46,13 +46,19 @@ export class UI {
         this._canvasContext = this._canvas.getContext('2d');
     }
 
-    attachListeners(game, loginEventListener) {
-        const self = this;
-        this._loginBtn.addEventListener('click',  () => loginEventListener.call(game, self._nameInput.value.trim()));
+    attachListeners(eventHandler) {
+        this._loginBtn.addEventListener('click',  () => eventHandler.onLogin(this._nameInput.value.trim()));
         this._submitForm.addEventListener('submit',  event => {
             event.preventDefault();
-            loginEventListener.call(game, self._nameInput.value.trim());
+            eventHandler.onLogin(this._nameInput.value.trim());
             return false;
+        });
+        this._canvas.addEventListener('click', event => {
+            const rect = this._canvas.getBoundingClientRect();
+            eventHandler.onShoot({
+                x: event.clientX - rect.left,
+                y: event.clientY - rect.top,
+            });
         });
     }
 
@@ -97,6 +103,10 @@ export class UI {
         this._displayQueue.classList.remove('hidden');
     }
 
+    /**
+     * We contain the target into a square because it's easier to calculate the coordinate
+     * @param target
+     */
     drawTarget(target) {
         if (!target || !target.coordinate || !target.coordinate.x || !target.coordinate.y || !target.size) {
             console.error('Invalid target object, missing some properties', target);
@@ -110,6 +120,16 @@ export class UI {
             this._canvasContext.closePath();
             this._canvasContext.fill();
         }
+        this._canvasContext.strokeStyle = '#212121';
+        this._canvasContext.lineWidth = 1;
+        this._canvasContext.beginPath();
+        this._canvasContext.strokeRect(target.coordinate.x - (target.size * 4), target.coordinate.y - (target.size * 4), target.size * 8, target.size * 8);
+        this._canvasContext.closePath();
+        this._canvasContext.fill();
+    }
+
+    removeTarget(target) {
+        console.log('removing target', target);
     }
 
     updateDashboard(player, players) {
