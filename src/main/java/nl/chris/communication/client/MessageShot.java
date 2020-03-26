@@ -13,7 +13,7 @@ public class MessageShot extends ClientMessage {
     private Player player;
 
     public MessageShot() {
-        super(MessageType.HIT);
+        super(MessageType.SHOT);
     }
 
     @Override
