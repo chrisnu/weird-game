@@ -10,6 +10,10 @@ public class TargetFactory {
 
     private static AtomicInteger id = new AtomicInteger(1);
 
+    /**
+     * Generates target with random coordinate and size
+     * @return Target Returns a new random target
+     */
     public Target newTarget() {
         final Random random = new Random();
         final Coordinate coordinate = new Coordinate(

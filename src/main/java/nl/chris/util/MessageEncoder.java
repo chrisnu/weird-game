@@ -6,6 +6,9 @@ import nl.chris.communication.Message;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 
+/**
+ * Encodes outgoing message sent to client
+ */
 public class MessageEncoder implements Encoder.Text<Message> {
 
     private static Gson gson = new Gson();

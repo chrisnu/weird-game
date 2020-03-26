@@ -3,6 +3,10 @@
 export class ReceivedMessageHandler {
     _game;
 
+    /**
+     * Handles incoming message from server
+     * @param game
+     */
     constructor(game) {
         this._game = game;
     }

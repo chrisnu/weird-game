@@ -2,6 +2,9 @@ package nl.chris.game.actor;
 
 import lombok.Getter;
 
+/**
+ * Coordinate representation to be used for shot coordinate and target coordinate
+ */
 public class Coordinate {
     @Getter
     private final int x;

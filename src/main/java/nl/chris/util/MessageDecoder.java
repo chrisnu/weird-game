@@ -12,6 +12,9 @@ import nl.chris.communication.server.MessageStart;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
+/**
+ * Decodes incoming message from client
+ */
 public class MessageDecoder implements Decoder.Text<Message> {
 
     private static Gson gson = new Gson();

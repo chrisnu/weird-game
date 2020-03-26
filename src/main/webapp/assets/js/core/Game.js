@@ -7,6 +7,12 @@ export class Game {
 
     _ui; _player; _players; _websocket; _status; _targets;
 
+    /**
+     * Core logic of the game
+     * @param ui UI renderer
+     * @param webSocket Initialized websocket
+     * @param player The playing player
+     */
     constructor(ui, webSocket, player) {
         this._ui = ui;
         this._websocket = webSocket;

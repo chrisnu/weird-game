@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
 public class Game {
 
     private final int maxPlayers;
@@ -39,6 +40,15 @@ public class Game {
 
     private AtomicInteger shownTargets = new AtomicInteger(0);
 
+    /**
+     * Core engine of the game. It manages the queue of players, target generation and game status checks
+     * @param targetFactory Factory that generates target
+     * @param coordinateFinder Class that is responsible to check if shot coordinate hit a target
+     * @param maxPlayers Number of players required to start the game
+     * @param maxTargets Number of targets being shown through out the game
+     * @param maxSimTargets Maximum number of targets that are shown in one go
+     * @param maxDelay Maximum delay in second between wave of the targets
+     */
     public Game(TargetFactory targetFactory, CoordinateTargetFinder coordinateFinder, int maxPlayers, int maxTargets, int maxSimTargets, int maxDelay) {
         this.targetFactory = targetFactory;
         this.coordinateFinder = coordinateFinder;

@@ -22,6 +22,11 @@ export class UI {
     _color1;
     _color2;
 
+    /**
+     * Store DOM elements defined in index.html and assign event listeners to them. Also responsible for drawing targets
+     * @param color1 First color of the target
+     * @param color2 Second color of the target
+     */
     constructor(color1, color2) {
         this._color1 = color1;
         this._color2 = color2;

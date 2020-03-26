@@ -3,10 +3,16 @@
 import {MessageLogin} from "../message/client/MessageLogin.js";
 import {MessageShot} from "../message/client/MessageShot.js";
 
+
 export class EventHandler {
 
     _game; _player;
 
+    /**
+     * Handles message based on user event
+     * @param game
+     * @param player
+     */
     constructor(game, player) {
         this._game = game;
         this._player = player;
