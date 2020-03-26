@@ -19,12 +19,12 @@ class GameTest {
 
     @BeforeEach
     void setUp() {
-        game = new Game(new TargetFactory(), new BruteForceTargetFinder());
+        game = new Game(new TargetFactory(), new BruteForceTargetFinder(), 2, 1, 1, 3);
         gameEndpoint = new EndpointMock();
     }
 
     @Test
-    void processMessage() throws IOException, EncodeException, InterruptedException {
+    void processMessage() throws IOException, EncodeException {
         gameEndpoint.createNewSession();
         Player player1  = new Player(gameEndpoint.getSessionId());
         game.processMessage(new MessageLogin(player1), gameEndpoint);
@@ -34,11 +34,11 @@ class GameTest {
         game.processMessage(new MessageLogin(player2), gameEndpoint);
 
         Assertions.assertEquals(GameStatus.WAIT, game.getStatus());
-        Thread.sleep(5000);
+        game.gameCheck();
         Assertions.assertEquals(GameStatus.PLAY, game.getStatus());
 
         game.closeConnection(gameEndpoint);
-        Thread.sleep(5000);
+        game.gameCheck();
         Assertions.assertEquals(GameStatus.END, game.getStatus());
     }
 }

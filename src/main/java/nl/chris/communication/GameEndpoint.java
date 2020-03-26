@@ -1,8 +1,6 @@
 package nl.chris.communication;
 
-import nl.chris.game.Game;
-import nl.chris.game.factory.TargetFactory;
-import nl.chris.game.tool.BruteForceTargetFinder;
+import nl.chris.Application;
 import nl.chris.util.MessageDecoder;
 import nl.chris.util.MessageEncoder;
 
@@ -17,8 +15,6 @@ import java.io.IOException;
 )
 public class GameEndpoint implements Endpoint {
 
-    private static Game game = new Game(new TargetFactory(), new BruteForceTargetFinder());
-
     private Session session;
 
     @OnOpen
@@ -28,12 +24,12 @@ public class GameEndpoint implements Endpoint {
 
     @OnMessage
     public void onMessage(Session session, Message message) throws IOException, EncodeException {
-        game.processMessage(message, this);
+        Application.getGame().processMessage(message, this);
     }
 
     @OnClose
     public void onClose(Session session) {
-        game.closeConnection(this);
+        Application.getGame().closeConnection(this);
     }
 
     @OnError
