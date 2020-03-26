@@ -19,6 +19,6 @@ public class TargetFactory {
         final int score = random.nextInt(10) + 1;
         final int size = Math.abs(score - 11);
 
-        return new Target(coordinate, random.nextInt(10) + 1, size, id.getAndIncrement());
+        return new Target(coordinate, score, size, id.getAndIncrement());
     }
 }
