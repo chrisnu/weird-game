@@ -16,6 +16,11 @@ public class MessageLogin extends ClientMessage {
         super(MessageType.LOGIN);
     }
 
+    public MessageLogin(Player player) {
+        this();
+        this.player = player;
+    }
+
     @Override
     public ServerMessage generateResponse() {
         return null;

@@ -1,6 +1,7 @@
 package nl.chris.game;
 
-import nl.chris.communication.GameEndpoint;
+import lombok.Getter;
+import nl.chris.communication.Endpoint;
 import nl.chris.communication.Message;
 import nl.chris.communication.client.MessageLogin;
 import nl.chris.communication.client.MessageShot;
@@ -23,13 +24,17 @@ public class Game {
     private final int MAX_SIMULTANEOUS_TARGETS = 5;
     private final int MAX_DELAY_BETWEEN_TARGETS = 4;
 
+    @Getter
     private final Queue<Player> queue = new ConcurrentLinkedQueue<>();
+
+    @Getter
     private final Map<String, Player> livePlayers = new ConcurrentHashMap<>();
     private final Set<Target> targets = new CopyOnWriteArraySet<>();
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
     private final TargetFactory targetFactory;
     private final CoordinateTargetFinder coordinateFinder;
 
+    @Getter
     private GameStatus status = GameStatus.WAIT;
 
     private AtomicInteger shownTargets = new AtomicInteger(0);
@@ -44,15 +49,15 @@ public class Game {
         this.coordinateFinder = coordinateFinder;
     }
 
-    public void closeConnection(GameEndpoint gameEndpoint) {
-        String session = gameEndpoint.getSession().getId();
+    public void closeConnection(Endpoint gameEndpoint) {
+        String session = gameEndpoint.getSessionId();
         Player player = new Player(session);
         queue.remove(player);
         livePlayers.remove(session);
     }
 
-    public void processMessage(Message message, GameEndpoint gameEndpoint) throws IOException, EncodeException {
-        String session = gameEndpoint.getSession().getId();
+    public void processMessage(Message message, Endpoint gameEndpoint) throws IOException, EncodeException {
+        String session = gameEndpoint.getSessionId();
         if (message instanceof MessageLogin) {
             Player player = new Player(session);
             if (queue.contains(player) || livePlayers.containsKey(session)) {
@@ -60,6 +65,10 @@ public class Game {
             }
 
             player = ((MessageLogin) message).getPlayer();
+            if (player == null) {
+                throw new IllegalArgumentException("Message does not contain player");
+            }
+
             player.setGameEndpoint(gameEndpoint);
             player.setSession(session);
             queue.add(player);

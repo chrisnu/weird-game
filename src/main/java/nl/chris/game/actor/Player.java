@@ -3,7 +3,7 @@ package nl.chris.game.actor;
 import com.google.gson.annotations.Expose;
 import lombok.Getter;
 import lombok.Setter;
-import nl.chris.communication.GameEndpoint;
+import nl.chris.communication.Endpoint;
 import nl.chris.communication.Message;
 
 import javax.websocket.EncodeException;
@@ -14,7 +14,7 @@ public class Player extends Actor {
     @Getter
     @Setter
     @Expose(deserialize = false, serialize = false)
-    private transient GameEndpoint gameEndpoint;
+    private transient Endpoint gameEndpoint;
 
     @Getter
     @Setter
@@ -29,20 +29,16 @@ public class Player extends Actor {
         this.session = session;
     }
 
-    public void shoot(Coordinate coordinate) {
-
-    }
-
     public void disconnect() {
         try {
-            gameEndpoint.getSession().close();
+            gameEndpoint.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void broadcast(Message message) throws IOException, EncodeException {
-        this.gameEndpoint.getSession().getBasicRemote().sendObject(message);
+        this.gameEndpoint.sendMessage(message);
     }
 
     @Override

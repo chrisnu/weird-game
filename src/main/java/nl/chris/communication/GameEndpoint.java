@@ -1,6 +1,5 @@
 package nl.chris.communication;
 
-import lombok.Getter;
 import nl.chris.game.Game;
 import nl.chris.game.factory.TargetFactory;
 import nl.chris.game.tool.BruteForceTargetFinder;
@@ -16,11 +15,10 @@ import java.io.IOException;
         decoders = MessageDecoder.class,
         encoders = MessageEncoder.class
 )
-public class GameEndpoint {
+public class GameEndpoint implements Endpoint {
 
     private static Game game = new Game(new TargetFactory(), new BruteForceTargetFinder());
 
-    @Getter
     private Session session;
 
     @OnOpen
@@ -41,5 +39,17 @@ public class GameEndpoint {
     @OnError
     public void onError(Session session, Throwable throwable) {
         throwable.printStackTrace();
+    }
+
+    public String getSessionId() {
+        return session.getId();
+    }
+
+    public void close() throws IOException {
+        session.close();
+    }
+
+    public void sendMessage(Message message) throws IOException, EncodeException {
+        session.getBasicRemote().sendObject(message);
     }
 }
