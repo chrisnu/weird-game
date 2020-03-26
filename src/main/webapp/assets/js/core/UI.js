@@ -17,6 +17,7 @@ export class UI {
 
     _displayWait;
     _displayQueue;
+    _displayEnd;
 
     _color1;
     _color2;
@@ -37,6 +38,7 @@ export class UI {
         this._nameLabel = document.querySelector('label#label-name');
         this._displayWait = document.querySelector('div#display-wait');
         this._displayQueue = document.querySelector('div#display-queue');
+        this._displayEnd = document.querySelector('div.display-end');
         this._dashboard = document.querySelector('div#dashboard');
         this._playersUl = document.querySelector('ul.players');
         this._playersLiTemplate = document.querySelector('li.player').outerHTML;
@@ -93,7 +95,9 @@ export class UI {
     }
 
     _showEndScreen() {
-        window.onbeforeunload = null;    }
+        this._canvas.classList.add('hidden');
+        this._displayEnd.classList.remove('hidden');
+    }
 
     _showQueueScreen() {
         this._loginBtn.classList.add('hidden');

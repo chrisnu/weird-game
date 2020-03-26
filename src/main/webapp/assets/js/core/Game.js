@@ -28,7 +28,6 @@ export class Game {
     }
 
     notify(message) {
-        console.log(message);
         this._websocket.send(JSON.stringify(message));
     }
 
