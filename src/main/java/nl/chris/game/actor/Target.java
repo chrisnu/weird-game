@@ -1,7 +1,10 @@
 package nl.chris.game.actor;
 
+import lombok.Getter;
+
 public class Target extends Actor {
 
+    @Getter
     private final int id;
 
     public Target(Coordinate coordinate, int score, int size, int id) {
