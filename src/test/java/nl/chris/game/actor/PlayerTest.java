@@ -27,4 +27,16 @@ class PlayerTest {
         Assertions.assertEquals(EXPECTED_SCORE, player.getScore());
         Assertions.assertEquals(EXPECTED_SIZE, player.getSize());
     }
+
+    @Test
+    public void testHashCode() {
+        Player newPlayer = new Player("session1");
+        Assertions.assertEquals(player.hashCode(), newPlayer.hashCode());
+    }
+
+    @Test
+    public void testEquals() {
+        Player newPlayer = new Player("session1");
+        Assertions.assertEquals(player, newPlayer);
+    }
 }
