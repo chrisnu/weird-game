@@ -113,6 +113,7 @@ public class Game {
                         }
                     }
 
+                    targets.clear();
                     status = GameStatus.PLAY;
                     broadcast(new MessageStart(livePlayers.values()));
                     executor.schedule(this::randomlyCreateTarget, new Random().nextInt(MAX_DELAY_BETWEEN_TARGETS -1) + 1, TimeUnit.SECONDS);

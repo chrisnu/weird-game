@@ -5,12 +5,13 @@ import {EventHandler} from "./EventHandler.js";
 
 export class Game {
 
-    _ui; _player; _players; _websocket; _status;
+    _ui; _player; _players; _websocket; _status; _targets;
 
     constructor(ui, webSocket, player) {
         this._ui = ui;
         this._websocket = webSocket;
         this._player = player;
+        this._targets = [];
     }
 
     start() {
@@ -37,10 +38,37 @@ export class Game {
     }
 
     updatePlayer(player) {
-        this._player = player;
+        if (!player) {
+            return;
+        }
+
+        if (!this._player || !this._player.session || (player.session && player.session === this._player.session)) {
+            this._player = player;
+        }
+
+        if (this._players) {
+            this._players = this._players.map(p => {
+                if (p.session === player.session) {
+                    return player;
+                }
+
+                return p;
+            });
+        }
+
+        this._ui.updateDashboard(this._player, this._players);
     }
 
-    removeTarget(target) {
-        this._ui.removeTarget(target);
+    addTarget(target) {
+        this._targets.push(target);
+    }
+
+    removeTargets(targets) {
+        this._targets = this._targets.filter(t => targets.some(toRemove => toRemove.id !== t.id));
+        this.renderTarget();
+    }
+
+    renderTarget() {
+        this._ui.drawTargets(this._targets);
     }
 }

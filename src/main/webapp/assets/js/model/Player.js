@@ -4,7 +4,7 @@ import {Actor} from "./Actor.js";
 
 export class Player extends Actor {
 
-    id; _gunshotSound;
+    session; _gunshotSound;
 
     constructor(name) {
         super();

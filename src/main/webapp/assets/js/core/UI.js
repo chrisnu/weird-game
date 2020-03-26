@@ -105,34 +105,38 @@ export class UI {
 
     /**
      * We contain the target into a square because it's easier to calculate the coordinate
-     * @param target
+     * @param targets
      */
-    drawTarget(target) {
-        if (!target || !target.coordinate || !target.coordinate.x || !target.coordinate.y || !target.size) {
-            console.error('Invalid target object, missing some properties', target);
-            return;
-        }
+    drawTargets(targets) {
+        this._canvasContext.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
-        for (let i = 4; i >= 1; i--) {
-            this._canvasContext.fillStyle = i % 2 === 0 ? this._color1 : this._color2;
+        targets.forEach(target => {
+            if (!target || !target.coordinate || !target.coordinate.x || !target.coordinate.y || !target.size) {
+                console.error('Invalid target object, missing some properties', target);
+                return;
+            }
+
+            for (let i = 4; i >= 1; i--) {
+                this._canvasContext.fillStyle = i % 2 === 0 ? this._color1 : this._color2;
+                this._canvasContext.beginPath();
+                this._canvasContext.arc(target.coordinate.x, target.coordinate.y, target.size * i, 0, Math.PI * 2);
+                this._canvasContext.closePath();
+                this._canvasContext.fill();
+            }
+            this._canvasContext.strokeStyle = '#212121';
+            this._canvasContext.lineWidth = 1;
             this._canvasContext.beginPath();
-            this._canvasContext.arc(target.coordinate.x, target.coordinate.y, target.size * i, 0, Math.PI * 2);
+            this._canvasContext.strokeRect(target.coordinate.x - (target.size * 4), target.coordinate.y - (target.size * 4), target.size * 8, target.size * 8);
             this._canvasContext.closePath();
             this._canvasContext.fill();
-        }
-        this._canvasContext.strokeStyle = '#212121';
-        this._canvasContext.lineWidth = 1;
-        this._canvasContext.beginPath();
-        this._canvasContext.strokeRect(target.coordinate.x - (target.size * 4), target.coordinate.y - (target.size * 4), target.size * 8, target.size * 8);
-        this._canvasContext.closePath();
-        this._canvasContext.fill();
-    }
-
-    removeTarget(target) {
-        console.log('removing target', target);
+        });
     }
 
     updateDashboard(player, players) {
+        if (!player || !players) {
+            return;
+        }
+
         this._dashboard.classList.remove('hidden');
 
         // Clean the ul child nodes

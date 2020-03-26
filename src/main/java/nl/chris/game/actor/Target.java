@@ -2,10 +2,13 @@ package nl.chris.game.actor;
 
 public class Target extends Actor {
 
-    public Target(Coordinate coordinate, int score, int size) {
+    private final int id;
+
+    public Target(Coordinate coordinate, int score, int size, int id) {
         this.coordinate = coordinate;
         this.score = score;
         this.size = size;
+        this.id = id;
     }
 
     @Override
@@ -15,12 +18,12 @@ public class Target extends Actor {
         }
 
         Target target = (Target) object;
-        return target.coordinate.equals(coordinate) && target.score == score && target.size == size;
+        return target.id == id;
     }
 
     @Override
     public int hashCode() {
-        return coordinate.hashCode() * score * size * 31;
+        return id * 31;
     }
 
 }

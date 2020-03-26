@@ -31,11 +31,16 @@ export class ReceivedMessageHandler {
                 break;
 
             case 'TARGET':
-                message.targets.forEach(target => this._game._ui.drawTarget(target));
+                message.targets.forEach(target => {
+                    this._game.addTarget(target);
+                });
+
+                this._game.renderTarget();
                 break;
 
             case 'HIT':
-                message.targets.forEach(target =>this._game.removeTarget(target) );
+                this._game.updatePlayer(message.player);
+                this._game.removeTargets(message.targets);
                 break;
         }
 
